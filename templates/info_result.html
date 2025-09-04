@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats d'analyse - PDF Tools{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="text-center mb-4">
+            <h1><i class="fas fa-chart-bar text-info"></i> Résultats d'analyse</h1>
+            <p class="lead">Informations détaillées sur votre fichier PDF</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="fas fa-info-circle"></i> Informations générales</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>Nombre de pages :</strong></td>
+                                <td><span class="badge bg-primary">{{ info.page_count }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Taille du fichier :</strong></td>
+                                <td><span class="badge bg-success">{{ info.file_size_mb }} MB</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fichier PDF valide :</strong></td>
+                                <td>
+                                    {% if info.is_pdf %}
+                                        <span class="badge bg-success"><i class="fas fa-check"></i> Oui</span>
+                                    {% else %}
+                                        <span class="badge bg-danger"><i class="fas fa-times"></i> Non</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fichier protégé :</strong></td>
+                                <td>
+                                    {% if info.is_encrypted %}
+                                        <span class="badge bg-warning"><i class="fas fa-lock"></i> Oui</span>
+                                    {% else %}
+                                        <span class="badge bg-success"><i class="fas fa-unlock"></i> Non</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5><i class="fas fa-file-alt"></i> Métadonnées</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            {% if info.metadata.title %}
+                            <tr>
+                                <td><strong>Titre :</strong></td>
+                                <td>{{ info.metadata.title }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if info.metadata.author %}
+                            <tr>
+                                <td><strong>Auteur :</strong></td>
+                                <td>{{ info.metadata.author }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if info.metadata.subject %}
+                            <tr>
+                                <td><strong>Sujet :</strong></td>
+                                <td>{{ info.metadata.subject }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if info.metadata.creator %}
+                            <tr>
+                                <td><strong>Créateur :</strong></td>
+                                <td>{{ info.metadata.creator }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if info.metadata.producer %}
+                            <tr>
+                                <td><strong>Producteur :</strong></td>
+                                <td>{{ info.metadata.producer }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if info.metadata.creationDate %}
+                            <tr>
+                                <td><strong>Date de création :</strong></td>
+                                <td>{{ info.metadata.creationDate }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if info.metadata.modDate %}
+                            <tr>
+                                <td><strong>Dernière modification :</strong></td>
+                                <td>{{ info.metadata.modDate }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5><i class="fas fa-cogs"></i> Recommandations</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <i class="fas fa-compress fa-2x text-success mb-2"></i>
+                                    <h6>Compression</h6>
+                                    {% if info.file_size_mb > 10 %}
+                                        <p class="text-warning">Fichier volumineux - Compression recommandée</p>
+                                    {% else %}
+                                        <p class="text-success">Taille acceptable</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <i class="fas fa-shield-alt fa-2x text-warning mb-2"></i>
+                                    <h6>Sécurité</h6>
+                                    {% if info.is_encrypted %}
+                                        <p class="text-info">Fichier protégé</p>
+                                    {% else %}
+                                        <p class="text-success">Fichier non protégé</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <i class="fas fa-file-pdf fa-2x text-primary mb-2"></i>
+                                    <h6>Qualité</h6>
+                                    {% if info.is_pdf %}
+                                        <p class="text-success">Fichier PDF valide</p>
+                                    {% else %}
+                                        <p class="text-danger">Fichier PDF corrompu</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('pdf_info') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Analyser un autre fichier
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Retour à l'accueil
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

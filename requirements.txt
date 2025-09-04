@@ -4,3 +4,14 @@
 Flask==2.3.3
 PyPDF2==3.0.1
 Werkzeug==2.3.7
+
+# Dépendances pour la compression PDF
+# Note: Ghostscript doit être installé séparément sur le système
+# Ubuntu/Debian: sudo apt-get install ghostscript
+# CentOS/RHEL: sudo yum install ghostscript
+# macOS: brew install ghostscript
+
+# Dépendances pour la conversion PDF
+PyMuPDF==1.23.8          # fitz - pour la manipulation PDF et conversion en images
+Pillow==10.0.1           # PIL - pour le traitement d'images
+pdf2docx==0.5.6          # pour la conversion PDF vers Word

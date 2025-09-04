@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Convertir PDF - PDF Tools{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="text-center mb-4">
+            <h1><i class="fas fa-exchange-alt text-warning"></i> Convertir PDF</h1>
+            <p class="lead">Convertissez vos PDF vers d'autres formats</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="file" class="form-label">Sélectionner un fichier PDF</label>
+                        <div class="drop-zone" onclick="document.getElementById('file').click()">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <p class="mb-0">Cliquez ici ou glissez-déposez votre fichier PDF</p>
+                            <small class="text-muted">Taille maximale : 50 MB</small>
+                        </div>
+                        <input type="file" class="form-control d-none" id="file" name="file" accept=".pdf" required>
+                        <div id="file-info" class="mt-2" style="display: none;">
+                            <div class="alert alert-info">
+                                <i class="fas fa-file-pdf"></i> <span id="file-name"></span>
+                                <span class="badge bg-secondary ms-2" id="file-size"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="conversion_type" class="form-label">Type de conversion</label>
+                        <select class="form-select" id="conversion_type" name="conversion_type" required>
+                            <option value="images">PDF vers Images</option>
+                            <option value="word">PDF vers Word (.docx)</option>
+                            <option value="text">Extraire le texte</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4" id="format-section" style="display: none;">
+                        <label for="format" class="form-label">Format des images</label>
+                        <select class="form-select" id="format" name="format">
+                            <option value="PNG">PNG (Recommandé)</option>
+                            <option value="JPEG">JPEG</option>
+                            <option value="TIFF">TIFF</option>
+                            <option value="BMP">BMP</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-warning btn-lg" id="submit-btn" disabled>
+                            <i class="fas fa-exchange-alt"></i> Convertir le PDF
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-images fa-3x text-primary mb-3"></i>
+                            <h5>PDF vers Images</h5>
+                            <p class="card-text">Convertissez chaque page de votre PDF en images séparées</p>
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check text-success"></i> Formats : PNG, JPEG, TIFF, BMP</li>
+                                <li><i class="fas fa-check text-success"></i> Haute résolution</li>
+                                <li><i class="fas fa-check text-success"></i> Archive ZIP téléchargeable</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-word fa-3x text-info mb-3"></i>
+                            <h5>PDF vers Word</h5>
+                            <p class="card-text">Convertissez votre PDF en document Word éditable</p>
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check text-success"></i> Format .docx</li>
+                                <li><i class="fas fa-check text-success"></i> Texte éditable</li>
+                                <li><i class="fas fa-check text-success"></i> Mise en forme préservée</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-alt fa-3x text-secondary mb-3"></i>
+                            <h5>Extraire le texte</h5>
+                            <p class="card-text">Extrayez uniquement le texte de votre PDF</p>
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check text-success"></i> Format .txt</li>
+                                <li><i class="fas fa-check text-success"></i> Texte brut</li>
+                                <li><i class="fas fa-check text-success"></i> Rapide et léger</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('file');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const submitBtn = document.getElementById('submit-btn');
+    const dropZone = document.querySelector('.drop-zone');
+    const conversionType = document.getElementById('conversion_type');
+    const formatSection = document.getElementById('format-section');
+
+    // Gestion du clic sur la zone de drop
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Gestion du changement de fichier
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileInfo.style.display = 'block';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Gestion du changement de type de conversion
+    conversionType.addEventListener('change', function() {
+        if (this.value === 'images') {
+            formatSection.style.display = 'block';
+        } else {
+            formatSection.style.display = 'none';
+        }
+    });
+
+    // Gestion du drag & drop
+    dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+});
+</script>
+{% endblock %}

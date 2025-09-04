@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Compresser PDF - PDF Tools{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="text-center mb-4">
+            <h1><i class="fas fa-compress text-success"></i> Compresser PDF</h1>
+            <p class="lead">Réduisez la taille de vos fichiers PDF</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="file" class="form-label">Sélectionner un fichier PDF</label>
+                        <div class="drop-zone" onclick="document.getElementById('file').click()">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <p class="mb-0">Cliquez ici ou glissez-déposez votre fichier PDF</p>
+                            <small class="text-muted">Taille maximale : 50 MB</small>
+                        </div>
+                        <input type="file" class="form-control d-none" id="file" name="file" accept=".pdf" required>
+                        <div id="file-info" class="mt-2" style="display: none;">
+                            <div class="alert alert-info">
+                                <i class="fas fa-file-pdf"></i> <span id="file-name"></span>
+                                <span class="badge bg-secondary ms-2" id="file-size"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="quality" class="form-label">Niveau de compression</label>
+                        <select class="form-select" id="quality" name="quality" required>
+                            <option value="high">Haute qualité (compression légère)</option>
+                            <option value="medium" selected>Qualité moyenne (compression équilibrée)</option>
+                            <option value="low">Basse qualité (compression maximale)</option>
+                        </select>
+                        <div class="form-text">
+                            <strong>Haute qualité :</strong> Compression légère, qualité préservée<br>
+                            <strong>Qualité moyenne :</strong> Équilibre entre taille et qualité<br>
+                            <strong>Basse qualité :</strong> Compression maximale, qualité réduite
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg" id="submit-btn" disabled>
+                            <i class="fas fa-compress"></i> Compresser le PDF
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-info-circle"></i> Informations sur la compression</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> <strong>Haute qualité :</strong> Réduction de ~20% de la taille</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>Qualité moyenne :</strong> Réduction de ~50% de la taille</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>Basse qualité :</strong> Réduction de ~70% de la taille</li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Note :</strong> La compression peut affecter la qualité des images dans le PDF. 
+                        Nous recommandons de tester avec une copie de votre fichier.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('file');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const submitBtn = document.getElementById('submit-btn');
+    const dropZone = document.querySelector('.drop-zone');
+
+    // Gestion du clic sur la zone de drop
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Gestion du changement de fichier
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileInfo.style.display = 'block';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Gestion du drag & drop
+    dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+});
+</script>
+{% endblock %}

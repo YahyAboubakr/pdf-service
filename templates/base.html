@@ -1,4 +1,3 @@
-"""
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -33,8 +32,10 @@
             </a>
             <div class="navbar-nav">
                 <a class="nav-link" href="{{ url_for('merge_pdfs') }}">Fusionner</a>
+                <a class="nav-link" href="{{ url_for('split_pdf') }}">Diviser</a>
                 <a class="nav-link" href="{{ url_for('compress') }}">Compresser</a>
                 <a class="nav-link" href="{{ url_for('convert') }}">Convertir</a>
+                <a class="nav-link" href="{{ url_for('pdf_info') }}">Informations</a>
             </div>
         </div>
     </nav>
@@ -58,4 +59,3 @@
     {% block scripts %}{% endblock %}
 </body>
 </html>
-"""

@@ -1,44 +1,185 @@
-"""
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="text-center mb-5">
-            <h1><i class="fas fa-file-pdf text-danger"></i> PDF Tools</h1>
-            <p class="lead">Outils gratuits pour manipuler vos fichiers PDF</p>
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 col-xl-6">
+            <div class="text-center">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-file-pdf text-danger me-3"></i>PDF Tools
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Outils gratuits et puissants pour manipuler vos fichiers PDF
+                </p>
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <span class="badge bg-success fs-6 me-2">
+                            <i class="fas fa-shield-alt me-1"></i>Sécurisé
+                        </span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="badge bg-primary fs-6 me-2">
+                            <i class="fas fa-bolt me-1"></i>Rapide
+                        </span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="badge bg-info fs-6">
+                            <i class="fas fa-heart me-1"></i>Gratuit
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tools Grid -->
+    <div class="row justify-content-center g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-object-group fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                    <h4 class="card-title fw-bold mb-3">Fusionner PDF</h4>
+                    <p class="card-text text-muted mb-4">
+                        Combinez plusieurs fichiers PDF en un seul document. 
+                        Parfait pour assembler des documents séparés.
+                    </p>
+                    <a href="{{ url_for('merge_pdfs') }}" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-object-group me-2"></i>Fusionner
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-object-group fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">Fusionner PDF</h5>
-                        <p class="card-text">Combinez plusieurs fichiers PDF en un seul document</p>
-                        <a href="{{ url_for('merge_pdfs') }}" class="btn btn-primary">Fusionner</a>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-4">
+                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-cut fa-2x text-danger"></i>
+                        </div>
                     </div>
+                    <h4 class="card-title fw-bold mb-3">Diviser PDF</h4>
+                    <p class="card-text text-muted mb-4">
+                        Divisez vos fichiers PDF en plusieurs documents. 
+                        Par pages, plages ou selon la table des matières.
+                    </p>
+                    <a href="{{ url_for('split_pdf') }}" class="btn btn-danger btn-lg px-4">
+                        <i class="fas fa-cut me-2"></i>Diviser
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-compress fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">Compresser PDF</h5>
-                        <p class="card-text">Réduisez la taille de vos fichiers PDF</p>
-                        <a href="{{ url_for('compress') }}" class="btn btn-success">Compresser</a>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-compress fa-2x text-success"></i>
+                        </div>
                     </div>
+                    <h4 class="card-title fw-bold mb-3">Compresser PDF</h4>
+                    <p class="card-text text-muted mb-4">
+                        Réduisez la taille de vos fichiers PDF sans perdre en qualité. 
+                        Idéal pour l'envoi par email.
+                    </p>
+                    <a href="{{ url_for('compress') }}" class="btn btn-success btn-lg px-4">
+                        <i class="fas fa-compress me-2"></i>Compresser
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-exchange-alt fa-3x text-warning mb-3"></i>
-                        <h5 class="card-title">Convertir PDF</h5>
-                        <p class="card-text">Convertissez vos PDF vers d'autres formats</p>
-                        <a href="{{ url_for('convert') }}" class="btn btn-warning">Convertir</a>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-4">
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-exchange-alt fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                    <h4 class="card-title fw-bold mb-3">Convertir PDF</h4>
+                    <p class="card-text text-muted mb-4">
+                        Convertissez vos PDF vers d'autres formats : images, Word, texte. 
+                        Compatible avec tous les types de documents.
+                    </p>
+                    <a href="{{ url_for('convert') }}" class="btn btn-warning btn-lg px-4">
+                        <i class="fas fa-exchange-alt me-2"></i>Convertir
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-4">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-info-circle fa-2x text-info"></i>
+                        </div>
+                    </div>
+                    <h4 class="card-title fw-bold mb-3">Informations PDF</h4>
+                    <p class="card-text text-muted mb-4">
+                        Analysez les propriétés de vos fichiers PDF : pages, taille, 
+                        métadonnées et bien plus encore.
+                    </p>
+                    <a href="{{ url_for('pdf_info') }}" class="btn btn-info btn-lg px-4">
+                        <i class="fas fa-info-circle me-2"></i>Analyser
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Pourquoi choisir PDF Tools ?</h2>
+                <p class="text-muted">Des outils professionnels, simples et sécurisés</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-lock fa-lg text-success"></i>
+                        </div>
+                        <h5 class="fw-bold">100% Sécurisé</h5>
+                        <p class="text-muted">Vos fichiers sont traités localement et supprimés automatiquement après traitement.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-rocket fa-lg text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">Ultra Rapide</h5>
+                        <p class="text-muted">Traitement optimisé pour des résultats instantanés, même avec de gros fichiers.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-mobile-alt fa-lg text-info"></i>
+                        </div>
+                        <h5 class="fw-bold">Responsive</h5>
+                        <p class="text-muted">Interface adaptée à tous les appareils : ordinateur, tablette et mobile.</p>
                     </div>
                 </div>
             </div>
@@ -46,4 +187,3 @@
     </div>
 </div>
 {% endblock %}
-"""
