@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="text-center mb-5">
+            <h1><i class="fas fa-file-pdf text-danger"></i> PDF Tools</h1>
+            <p class="lead">Outils gratuits pour manipuler vos fichiers PDF</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-object-group fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Fusionner PDF</h5>
+                        <p class="card-text">Combinez plusieurs fichiers PDF en un seul document</p>
+                        <a href="{{ url_for('merge_pdfs') }}" class="btn btn-primary">Fusionner</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-compress fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Compresser PDF</h5>
+                        <p class="card-text">Réduisez la taille de vos fichiers PDF</p>
+                        <a href="{{ url_for('compress') }}" class="btn btn-success">Compresser</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exchange-alt fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Convertir PDF</h5>
+                        <p class="card-text">Convertissez vos PDF vers d'autres formats</p>
+                        <a href="{{ url_for('convert') }}" class="btn btn-warning">Convertir</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+"""

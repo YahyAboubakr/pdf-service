@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Fusionner PDF - PDF Tools{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4"><i class="fas fa-object-group"></i> Fusionner des PDF</h2>
+        
+        <form method="POST" enctype="multipart/form-data" id="mergeForm">
+            <div class="drop-zone mb-3" id="dropZone">
+                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                <h4>Glissez-déposez vos fichiers PDF ici</h4>
+                <p>ou cliquez pour sélectionner</p>
+                <input type="file" name="files[]" multiple accept=".pdf" class="d-none" id="fileInput">
+            </div>
+            
+            <div id="fileList" class="mb-3"></div>
+            
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg" id="mergeBtn" disabled>
+                    <i class="fas fa-object-group"></i> Fusionner les PDF
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const mergeBtn = document.getElementById('mergeBtn');
+    let selectedFiles = [];
+
+    // Click pour ouvrir le sélecteur
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Drag & Drop
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        selectedFiles = Array.from(files).filter(file => file.type === 'application/pdf');
+        updateFileList();
+        updateMergeButton();
+    }
+
+    function updateFileList() {
+        fileList.innerHTML = '';
+        selectedFiles.forEach((file, index) => {
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'alert alert-info d-flex justify-content-between align-items-center';
+            fileDiv.innerHTML = `
+                <span><i class="fas fa-file-pdf text-danger"></i> ${file.name} (${formatFileSize(file.size)})</span>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeFile(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            fileList.appendChild(fileDiv);
+        });
+    }
+
+    function updateMergeButton() {
+        mergeBtn.disabled = selectedFiles.length < 2;
+    }
+
+    window.removeFile = function(index) {
+        selectedFiles.splice(index, 1);
+        updateFileList();
+        updateMergeButton();
+        
+        // Créer une nouvelle liste de fichiers pour l'input
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
+    };
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+});
+</script>
+{% endblock %}
+"""
