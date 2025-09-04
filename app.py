@@ -1,4 +1,3 @@
-# app.py - Application Flask principale
 from flask import Flask, request, render_template, send_file, flash, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
