@@ -56,19 +56,45 @@ class PDFCompressor:
                 'gs',
                 '-sDEVICE=pdfwrite',
                 '-dCompatibilityLevel=1.4',
-                '-dPDFSETTINGS=/ebook' if quality == 'medium' else f'-dPDFSETTINGS=/{quality}',
                 '-dNOPAUSE',
                 '-dQUIET',
                 '-dBATCH',
-                '-dColorImageDownsampleType=/Bicubic',
-                '-dColorImageResolution=150',
-                '-dGrayImageDownsampleType=/Bicubic',
-                '-dGrayImageResolution=150',
-                '-dMonoImageDownsampleType=/Bicubic',
-                '-dMonoImageResolution=150',
                 f'-sOutputFile={output_path}',
                 input_path
             ]
+            
+            # Ajouter les paramètres selon la qualité
+            if quality == 'low':
+                # Compression maximale - utilise PDFSETTINGS pour une compression agressive
+                cmd.extend([
+                    '-dPDFSETTINGS=/screen',
+                    '-dOptimize=true',
+                    '-dCompressFonts=true',
+                    '-dSubsetFonts=true'
+                ])
+            elif quality == 'medium':
+                # Compression équilibrée - paramètres personnalisés
+                cmd.extend([
+                    '-dColorImageDownsampleType=/Bicubic',
+                    '-dColorImageResolution=150',
+                    '-dGrayImageDownsampleType=/Bicubic',
+                    '-dGrayImageResolution=150',
+                    '-dMonoImageDownsampleType=/Bicubic',
+                    '-dMonoImageResolution=150',
+                    '-dOptimize=true',
+                    '-dCompressFonts=true'
+                ])
+            elif quality == 'high':
+                # Compression légère - préserve la qualité
+                cmd.extend([
+                    '-dColorImageDownsampleType=/Bicubic',
+                    '-dColorImageResolution=300',
+                    '-dGrayImageDownsampleType=/Bicubic',
+                    '-dGrayImageResolution=300',
+                    '-dMonoImageDownsampleType=/Bicubic',
+                    '-dMonoImageResolution=300',
+                    '-dOptimize=true'
+                ])
             
             # Exécuter la commande
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
@@ -114,9 +140,9 @@ class PDFCompressor:
                 'file_size_mb': round(file_size / (1024 * 1024), 2),
                 'file_size_bytes': file_size,
                 'estimated_compression': {
-                    'low': f"{round(file_size * 0.3 / (1024 * 1024), 2)} MB",
-                    'medium': f"{round(file_size * 0.5 / (1024 * 1024), 2)} MB",
-                    'high': f"{round(file_size * 0.8 / (1024 * 1024), 2)} MB"
+                    'low': f"{round(file_size * 0.2 / (1024 * 1024), 2)} MB (compression maximale)",
+                    'medium': f"{round(file_size * 0.4 / (1024 * 1024), 2)} MB (compression équilibrée)",
+                    'high': f"{round(file_size * 0.7 / (1024 * 1024), 2)} MB (compression légère)"
                 }
             }
         except Exception as e:
