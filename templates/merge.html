@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('fileInput');
     const fileList = document.getElementById('fileList');
     const mergeBtn = document.getElementById('mergeBtn');
+    const mergeForm = document.getElementById('mergeForm');
     let selectedFiles = [];
 
     // Click pour ouvrir le sélecteur
@@ -60,10 +61,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function handleFiles(files) {
-        selectedFiles = Array.from(files).filter(file => file.type === 'application/pdf');
+        const incoming = Array.from(files).filter(file => {
+            const isPdfMime = file.type === 'application/pdf';
+            const isPdfExt = file.name && file.name.toLowerCase().endsWith('.pdf');
+            return isPdfMime || isPdfExt;
+        });
+        const combined = [...selectedFiles, ...incoming];
+        // Dédoublonner par (name, size, lastModified)
+        selectedFiles = combined.filter((file, index, self) =>
+            self.findIndex(f => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified) === index
+        );
         updateFileList();
         updateMergeButton();
+        // Réinitialiser la valeur de l'input pour permettre de re-sélectionner les mêmes fichiers
+        fileInput.value = '';
     }
+
+    // Avant l'envoi du formulaire, pousser tous les fichiers sélectionnés dans l'input
+    mergeForm.addEventListener('submit', (e) => {
+        if (selectedFiles.length < 2) {
+            e.preventDefault();
+            return;
+        }
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
+    });
 
     function updateFileList() {
         fileList.innerHTML = '';
